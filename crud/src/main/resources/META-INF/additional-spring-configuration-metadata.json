@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "sprimg.jpa.hibernet.ddl-auto",
+      "type": "java.lang.String",
+      "description": "A description for 'sprimg.jpa.hibernet.ddl-auto'"
+    }
+  ]
+}
