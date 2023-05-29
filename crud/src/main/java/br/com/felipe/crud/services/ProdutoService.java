@@ -37,27 +37,42 @@ public class ProdutoService {
  * @return Retorna produto 
  */
 public Optional<ProdutoDTO> buscarPorId(Integer id){
-  
+  // obtendo optional de produto por id
   Optional<Produto> produto = produtoRepository.findById(id);
 
   if (produto.isEmpty()) {
     throw new ResourceNotFoundException("Produto com id:" +id+ ", não encontrado.");
   }
-  
-  ProdutoDTO dto = new ModelMapper().map( , getClass(), null)
-  return 
-
+ 
+  // convertendo o optional de produto em um produtoDTO
+  ProdutoDTO dto = new ModelMapper().map(produto.get(), ProdutoDTO.class);
+ 
+  //criando e retornando um optional de dto
+  return Optional.of(dto);
   
 }
 
   /**
    * Adiciona produto na lista
-   * @param produto que será adicionado
+   * @param produtoDTO que será adicionado
    * @return Retorna produto adicionado na lista
    */
-  public ProdutoDTO adicionar(ProdutoDTO produto){
+  public ProdutoDTO adicionar(ProdutoDTO produtoDTO){
     //regra de negocio aqui..
-    return produtoRepository.adicionar(produto);
+    produtoDTO.setId(null);
+    
+    //criar objeto de mapeamento
+    ModelMapper mapper = new  ModelMapper();
+    
+    //converte produtoDTO em produto model
+    Produto produto = mapper.map(produtoDTO, Produto.class);
+    
+    //salva produto no banco de dados
+    produto = produtoRepository.save(produto);
+    produtoDTO.setId(produto.getId());
+    //retorna produtoDTO 
+    return produtoDTO;
+
   }
 
     /**
@@ -66,7 +81,13 @@ public Optional<ProdutoDTO> buscarPorId(Integer id){
    */
   public void deletar(Integer id){
     //logica de validação
-    produtoRepository.deletar(id);
+    //verificar se existe
+    Optional<Produto> produto = produtoRepository.findById(id);
+    
+    if(produto.isEmpty()){
+      throw new ResourceNotFoundException("Produto com id:"+id+" não existe.");
+    } 
+    produtoRepository.deleteById(id);
   }
 
   /**
@@ -75,10 +96,23 @@ public Optional<ProdutoDTO> buscarPorId(Integer id){
  * @param id do produto
  * @return Retorna produto após atualizar a lista
  */
-public ProdutoDTO atualizar(Integer id, ProdutoDTO produto){
+public ProdutoDTO atualizar(Integer id, ProdutoDTO produtoDTO){
   //logica de validação
-  produto.setId(id);
-  return produtoRepository.atualizar(produto);
+  //passar o id para produtoDTO
+  produtoDTO.setId(id);
+
+  //cria objeto de mapeamento
+  ModelMapper mapper = new ModelMapper();
+  
+  //converte produtoDto em produto model
+  Produto produto =  mapper.map(produtoDTO, Produto.class);
+
+  //atualiza o produto no banco de dados
+  produtoRepository.save(produto);
+
+  //retorna o produto atualizado
+  return produtoDTO;
+
 }
     
 }

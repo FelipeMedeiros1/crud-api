@@ -13,7 +13,7 @@ import lombok.Setter;
 @Entity
 public class Produto { 
   @Id
-   @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
   private String nome;
   private Integer quantidade;

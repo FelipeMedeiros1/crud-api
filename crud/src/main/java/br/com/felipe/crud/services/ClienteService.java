@@ -2,11 +2,14 @@ package br.com.felipe.crud.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.felipe.crud.model.Cliente;
+import br.com.felipe.crud.model.cadastro.Cliente;
+import br.com.felipe.crud.model.exception.ResourceNotFoundException;
 import br.com.felipe.crud.repository.ClienteRepository;
 import br.com.felipe.crud.shared.ClienteDTO;
 
@@ -20,7 +23,10 @@ public class ClienteService {
    * @return lista de clientes
    */
   public List<ClienteDTO> buscarTodos(){
-    return clienteRepository.buscarTodos();
+    List<Cliente> clientes = clienteRepository.findAll();
+
+    return clientes.stream().map(cliente -> new ModelMapper().map(cliente,ClienteDTO.class))
+    .collect(Collectors.toList());
   
   }
   /**
@@ -28,22 +34,45 @@ public class ClienteService {
    * @return cliente encontrado
    */
   public Optional<ClienteDTO> buscarPorId(Integer id){
-    return clienteRepository.buscarPorId(id);
+    
+    Optional<Cliente> cliente =  clienteRepository.findById(id);
+   
+    if (cliente.isEmpty()) {
+      throw new ResourceNotFoundException("Cliente com id:" +id+ ", não encontrado.");
+    }
+    
+    ClienteDTO dto = new ModelMapper().map(cliente.get(), ClienteDTO.class);
+
+    return Optional.of(dto);
   }
 
   /**
    * @param cliente que será adicionado
    * @return cliente adicionado na lista
    */
-  public ClienteDTO adicionar(ClienteDTO cliente){
-   return clienteRepository.adicionar(cliente);
+  public ClienteDTO adicionar(ClienteDTO clienteDTO){
+    clienteDTO.setId(null);
+
+    Cliente cliente = new ModelMapper().map(clienteDTO, Cliente.class);
+
+    cliente = clienteRepository.save(cliente);
+
+    clienteDTO.setId(cliente.getId());
+
+   return clienteDTO;
   }
 
-  /**
+  /** 
    * @param id do cliente que será deletado
    */
   public void deletar(Integer id){
-    clienteRepository.deletar(id);
+    Optional<Cliente> cliente = clienteRepository.findById(id);
+
+    if(cliente.isEmpty()){
+      throw new ResourceNotFoundException("Cliente com id:"+id+" não existe.");
+    }
+    
+    clienteRepository.deleteById(id);
   }
 
   /**
@@ -51,10 +80,14 @@ public class ClienteService {
    * @param cliente que será atualizado
    * @return cliente atualizado
    */
-  public ClienteDTO atualizar(Integer id, ClienteDTO cliente){
-    cliente.setId(id);
-    return clienteRepository.atualizar(cliente);
-  
+  public ClienteDTO atualizar(Integer id, ClienteDTO clienteDTO){
+    clienteDTO.setId(id);
+     
+    Cliente cliente = new ModelMapper().map(clienteDTO, Cliente.class);
+
+    clienteRepository.save(cliente);
+
+    return clienteDTO;
   }
     
 }
