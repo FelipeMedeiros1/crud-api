@@ -1,4 +1,4 @@
-package br.com.felipe.crud.view.controller;
+package br.com.felipe.crud.view.controller.produto;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.felipe.crud.services.ProdutoService;
 import br.com.felipe.crud.shared.ProdutoDTO;
-import br.com.felipe.crud.view.ProdutoRequest;
-import br.com.felipe.crud.view.ProdutoResponse;
 
 @RestController
 @RequestMapping("/api/produto")
@@ -47,9 +45,9 @@ public class ProdutoController {
    
     Optional<ProdutoDTO> produtoDTO = produtoService.buscarPorId(id);
 
-    ProdutoResponse produto = new ModelMapper().map(produtoDTO.get(), ProdutoResponse.class);
+    ProdutoResponse produtoResponse = new ModelMapper().map(produtoDTO.get(), ProdutoResponse.class);
 
-    return new ResponseEntity<>(Optional.of(produto),HttpStatus.OK);
+    return new ResponseEntity<>(Optional.of(produtoResponse),HttpStatus.OK);
   }
 
 @PostMapping
@@ -67,7 +65,7 @@ public class ProdutoController {
   @DeleteMapping("/{id}")
   public ResponseEntity<String> deletar(@PathVariable Integer id){
     produtoService.deletar(id);
-    return new ResponseEntity<String>("Produto com id: "+ id +" , foi deletado com sucesso!", HttpStatus.NO_CONTENT);
+    return new ResponseEntity<>("Produto com id: "+ id +" , foi deletado com sucesso!", HttpStatus.NO_CONTENT);
 
   }
 

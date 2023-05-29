@@ -1,4 +1,4 @@
-package br.com.felipe.crud.view;
+package br.com.felipe.crud.view.controller.cliente;
 
 import lombok.Getter;
 import lombok.Setter;
