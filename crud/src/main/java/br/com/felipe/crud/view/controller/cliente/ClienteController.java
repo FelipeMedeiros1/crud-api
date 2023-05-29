@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.felipe.crud.services.ClienteService;
 import br.com.felipe.crud.shared.ClienteDTO;
+import br.com.felipe.crud.view.controller.cliente.model.ClienteRequest;
+import br.com.felipe.crud.view.controller.cliente.model.ClienteResponse;
 
 @RestController
 @RequestMapping("/api/cliente")

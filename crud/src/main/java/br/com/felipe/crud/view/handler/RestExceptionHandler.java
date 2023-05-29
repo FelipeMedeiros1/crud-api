@@ -1,4 +1,4 @@
-package br.com.felipe.crud.handler;
+package br.com.felipe.crud.view.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

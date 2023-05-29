@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.felipe.crud.services.ProdutoService;
 import br.com.felipe.crud.shared.ProdutoDTO;
+import br.com.felipe.crud.view.controller.produto.model.ProdutoRequest;
+import br.com.felipe.crud.view.controller.produto.model.ProdutoResponse;
 
 @RestController
 @RequestMapping("/api/produto")
